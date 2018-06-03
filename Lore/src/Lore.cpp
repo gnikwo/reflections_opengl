@@ -91,6 +91,7 @@ LORE::Window* Lore::init()
     
     Material* mat_basic = Lore::createMaterial("basic");
     mat_basic->load();
+    mat_basic->setCulling(false);
     Shader* shader_basic = Lore::createShader("basic");
     shader_basic->load();
     mat_basic->setShader(shader_basic);

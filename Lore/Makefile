@@ -12,7 +12,7 @@ SOURCES=Window.cpp Scene.cpp Camera.cpp Controller.cpp \
 		Shader.cpp Texture.cpp CubeMap.cpp FrameBuffer.cpp \
 		Lore.cpp Library.cpp \
 		Importer.cpp \
-		Cube.cpp
+		Cube.cpp Plan.cpp
 
 OUT_DIR=lib
 OBJ_DIR=obj

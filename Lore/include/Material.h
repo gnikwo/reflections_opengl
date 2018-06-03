@@ -55,6 +55,8 @@ namespace LORE
             void addCustomFloatUniform(std::string name, float* value);
             void addCustomVec2Uniform(std::string name, glm::vec2* value);
             void addCustomVec3Uniform(std::string name, glm::vec3* value);
+            void addCustomMat3Uniform(std::string name, glm::mat3* value);
+            void addCustomMat4Uniform(std::string name, glm::mat4* value);
 
             void sendCustomUniforms();
             void sendTextures();
@@ -71,6 +73,8 @@ namespace LORE
             std::map<std::string, float*> m__customFloatUniforms;
             std::map<std::string, glm::vec2*> m__customVec2Uniforms;
             std::map<std::string, glm::vec3*> m__customVec3Uniforms;
+            std::map<std::string, glm::mat3*> m__customMat3Uniforms;
+            std::map<std::string, glm::mat4*> m__customMat4Uniforms;
 
             Texture* m__pbrTexture;
             Texture* m__diffuseTexture;

@@ -131,16 +131,16 @@ void Camera::render(Node* renderer, glm::mat4 projection, glm::mat4 view, glm::m
        // glBindFramebuffer(GL_FRAMEBUFFER, m__fbo);
             glViewport(0, 0, 1280, 768);
 
-            glClearColor(m__backgroundColor.x, m__backgroundColor.y, m__backgroundColor.z, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            //glClearColor(m__backgroundColor.x, m__backgroundColor.y, m__backgroundColor.z, 1.0f);
+            //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
             glm::mat4 _view = getView();
 
-            glDepthMask(GL_FALSE);
-            m__environmentCube->render(this, m__projection, mat4(mat3(_view)), mat4(1.0));
-            glDepthMask(GL_TRUE);
+            //glDepthMask(GL_FALSE);
+            //m__environmentCube->render(this, m__projection, mat4(mat3(_view)), mat4(1.0));
+            //glDepthMask(GL_TRUE);
             if(m__scene)
                 m__scene->render(this, m__projection, _view, mat4(1.0));
             else

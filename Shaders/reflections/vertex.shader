@@ -12,6 +12,10 @@ varying vec3 normal;
 varying vec3 position;
 varying vec3 local_position;
 
+varying vec2 projected_n1;
+varying vec2 projected_n2;
+varying vec2 projected_n3;
+
 void main()
 {
     gl_Position = projection * view * model * vec4(in_Vertex, 1.0);

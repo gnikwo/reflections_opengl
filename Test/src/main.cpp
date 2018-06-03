@@ -10,6 +10,7 @@
 #include <Lore.h>
 #include <Light.h>
 #include <Cube.h>
+#include <Plan.h>
 
 #include "Diamond.h"
 
@@ -48,34 +49,53 @@ int main(int argc, char** argv)
         camera->setScene(default_scene);
     }
 	camera = Lore::createCamera("Camera");
-	camera->setPosition(vec3(5, 5, 5));
+	camera->setPosition(vec3(-1, 0, 1));
 	camera->setScene(default_scene);
     window->setCamera(camera);
 
     Lore::listCameras();
 
-    Material* mat_reflections = Lore::createMaterial("reflections");
+    Material* mat_reflections = Lore::createMaterial("true_reflections");
     mat_reflections->load();
-    Shader* shader_reflections = Lore::createShader("reflections");
+    Shader* shader_reflections = Lore::createShader("true_reflections");
     shader_reflections->load();
     mat_reflections->setShader(shader_reflections);
     mat_reflections->setCulling(false);
 
-    Diamond* diamond = new Diamond();
+    auto diamond = new Plan();
     diamond->load();
     diamond->setMaterial(mat_reflections);
-
-    Object* obj = Lore::createObject("cube");
+    
+    auto obj = Lore::createObject("cube");
     obj->setMesh(diamond);
     default_scene->addChild(obj);
+    
+    auto obj_ = Lore::createObject("cube");
+    obj_->setMesh(diamond);
+    default_scene->addChild(obj_);
 
+    obj_->setPosition(vec3(2,0,2));
+
+
+    float a = sqrt(2.0)/2.0, b = 0, c = -sqrt(2.0)/2.0;
+    vec3 mirrorNormal = vec3(a, b, c);
+    mat4 reflection;
     vec3 cameraPos;
     mat_reflections->addCustomVec3Uniform("cameraPos", &cameraPos);
+    mat_reflections->addCustomMat4Uniform("reflection", &reflection);
+    reflection = mat4(
+            vec4(1-2*a*a, -2*a*b, -2*a*c, 0), 
+            vec4(-2*a*b, 1-2*b*b, 0-2*b*c, 0), 
+            vec4(-2*a*c, -2*b*c, 1-2*c*c,0), 
+            vec4(0,0,0,1));
+    mat_reflections->addCustomVec3Uniform("mirrorNormal", &mirrorNormal);
+    
 
+    bool display_world = true;
 
     //----------
 
-    Controller* controller = new Controller(); // a Controller to bind the ESCAPE key to the Window
+    auto controller = new Controller(); // a Controller to bind the ESCAPE key to the Window
 
     controller->bind(GLFW_KEY_ESCAPE, [&window](double x, double y) {
         window->close();
@@ -111,8 +131,12 @@ int main(int argc, char** argv)
 	controller->bind(GLFW_KEY_G, [&window](double x, double y) {
 		window->setCamera(Lore::getCamera("Camera_1"));
     });
+	
+    controller->bind(GLFW_KEY_P, [&display_world](double x, double y) {
+            display_world = !display_world;
+    });
 
-    float a = 0;
+    float time = 0;
 
     //===================================
     cout << "===== RENDER =====" << endl;
@@ -123,14 +147,26 @@ int main(int argc, char** argv)
 
         controller->check(window); // Checks all bindings for the Window and execute the fonction if it matches
         cameraPos = camera->getPosition();
-        a += 0.01;
-        Light::lightPosition = vec3(sin(a)*6, 3, cos(a)*6);
+        time += 0.01;
+        Light::lightPosition = vec3(sin(time)*6, 3, cos(time)*6);
         //obj->setPosition(Light::lightPosition);
-        quat myQuat = quat(vec3(0,-a,0));
-        obj->setRotation(myQuat);
+        quat myQuat = quat(vec3(0,-time,0));
+        //obj->setRotation(myQuat);
+        
+
+        diamond->setMaterial(mat_reflections);
+        
+        glClearColor(0.1, 0.1, 0.1, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         window->render(); //
 
+        if(display_world)
+        {
+            diamond->setMaterial(Lore::getMaterial("basic"));
+
+            window->render(); //
+        }
         window->endFrame(start); // End the frame render process and display the image on the window
     }
 

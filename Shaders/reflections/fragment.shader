@@ -3,6 +3,10 @@
 varying vec3 normal;
 varying vec3 position;
 
+varying vec2 projected_n1;
+varying vec2 projected_n2;
+varying vec2 projected_n3;
+
 uniform vec3 cameraPos;
 uniform vec3 u_lightPosition;
 uniform samplerCube u_environmentMap;

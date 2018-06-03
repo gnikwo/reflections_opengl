@@ -13,6 +13,8 @@ Material::Material(): m__shader(), m__diffuseColor(vec4(0.5, 0, 0, 1)),
     m__customFloatUniforms(),
     m__customVec2Uniforms(),
     m__customVec3Uniforms(),
+    m__customMat3Uniforms(),
+    m__customMat4Uniforms(),
     m__pbrTexture(),
     m__diffuseTexture(),
     m__normalTexture(),
@@ -59,6 +61,18 @@ void Material::addCustomVec3Uniform(std::string name, glm::vec3* value)
 }
 
 
+void Material::addCustomMat3Uniform(std::string name, glm::mat3* value)
+{
+    m__customMat3Uniforms.insert(pair<string, mat3*>(name, value));
+}
+
+
+void Material::addCustomMat4Uniform(std::string name, glm::mat4* value)
+{
+    m__customMat4Uniforms.insert(pair<string, mat4*>(name, value));
+}
+
+
 void Material::sendCustomUniforms()
 {
 
@@ -80,6 +94,16 @@ void Material::sendCustomUniforms()
     for(auto p: m__customVec3Uniforms)
     {
         m__shader->sendVec3Uniform(p.first, *p.second);
+    }
+
+    for(auto p: m__customMat3Uniforms)
+    {
+        m__shader->sendMat3Uniform(p.first, *p.second);
+    }
+
+    for(auto p: m__customMat4Uniforms)
+    {
+        m__shader->sendMat4Uniform(p.first, *p.second);
     }
 
 }
